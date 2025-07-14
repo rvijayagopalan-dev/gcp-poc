@@ -62,6 +62,9 @@ jobs:
     defaults:
       run:
         shell: bash
+    
+        working-directory: .terraform  # 👈 This is your custom Terraform folder
+
 
     steps:
     # Checkout the repository to the GitHub Actions runner
