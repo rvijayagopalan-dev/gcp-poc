@@ -12,9 +12,7 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./terraform  # Set the working directory here
+       
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -32,23 +30,16 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: ./terraform  # Set the working directory here
 
     - name: Terraform Format
       run: terraform fmt -check
-      working-directory: ./terraform  # Set the working directory here
-
 
     - name: Terraform Validate
       run: terraform validate
-      working-directory: ./terraform  # Set the working directory here
-
 
     - name: Terraform Plan
       if: github.event_name == 'pull_request'
       run: terraform plan -no-color
-      working-directory: ./terraform  # Set the working directory here
-
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
