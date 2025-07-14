@@ -1,4 +1,4 @@
-name: 'Terraform GCP Deploy'
+name: 'PubSub GCP Deploy'
 
 on:
   push:
