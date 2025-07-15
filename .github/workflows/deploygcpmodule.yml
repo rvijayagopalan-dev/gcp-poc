@@ -1,0 +1,42 @@
+name: Deploy Modular GCP Resources
+
+on:
+  push:
+    paths:
+      - 'core/**'
+      - '.github/workflows/terraform.yml'
+    branches: [ main ]
+
+jobs:
+  terraform:
+    name: Apply GCP Terraform Modules
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Initialize and Apply Cloud Storage
+        working-directory: core/storage
+        run: |
+          terraform init
+          terraform validate
+          terraform plan -var-file=../terraform.tfvars
+          terraform apply -auto-approve -var-file=../terraform.tfvars
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Initialize and Apply Pub/Sub
+        working-directory: core/pubsub
+        run: |
+          terraform init
+          terraform validate
+          terraform plan -var-file=../terraform.tfvars
+          terraform apply -auto-approve -var-file=../terraform.tfvars
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
