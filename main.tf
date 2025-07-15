@@ -9,3 +9,9 @@ provider "google" {
   project = var.project
   region  = var.region
 }
+
+resource "google_storage_bucket" "default" {
+  name          = "pos-poc-json-input-bucket"
+  location      = "US"
+  storage_class = "STANDARD"
+}
