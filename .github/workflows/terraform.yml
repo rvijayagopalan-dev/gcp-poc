@@ -14,19 +14,11 @@ jobs:
     runs-on: ubuntu-latest
        
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-
     # Use Google Cloud Workload Identity Federation for secure authentication
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
       with:
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: 1.x.x # Specify your desired Terraform version
 
     - name: Terraform Init
       run: terraform init
@@ -52,9 +44,6 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
-      shell: bash
       env: 
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-        CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
-        CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.1.0
-        TF_LOG_PROVIDER: 'DEBUG' # Optional: Set to DEBUG for detailed logs
+      
