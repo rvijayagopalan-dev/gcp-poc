@@ -39,7 +39,7 @@ jobs:
       run: terraform validate
 
     - name: Terraform Plan
-      run: terraform plan -no-color
+      run: terraform plan -lock=false -no-color
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
