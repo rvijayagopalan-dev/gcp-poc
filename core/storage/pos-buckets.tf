@@ -1,5 +1,5 @@
 resource "google_storage_bucket" "pos-poc-json-input-bucket" {
   name          = "pos-poc-json-input-bucket"
-  location      = "us-east1"
+  location      = "us"
   storage_class = "STANDARD"
 }
