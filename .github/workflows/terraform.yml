@@ -27,28 +27,17 @@ jobs:
     
     - name: Terraform Init
       run: terraform init
-      env: 
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
     - name: Terraform Format
       run: terraform fmt -check
-      env: 
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
     - name: Terraform Validate
       run: terraform validate
-      env: 
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
     - name: Terraform Plan
       if: github.event_name == 'pull_request'
       run: terraform plan -no-color
-      env: 
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
-      env: 
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-      
