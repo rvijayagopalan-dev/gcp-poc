@@ -6,8 +6,8 @@ terraform {
 }
 
 provider "google" {
-  project      = var.project
-  region       = var.region
+  project = var.project
+  region  = var.region
 }
 
 resource "google_storage_bucket" "pos-poc-json-input-bucket" {
