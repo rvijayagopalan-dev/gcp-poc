@@ -1,0 +1,22 @@
+name: Deploy Resources to GCP
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: ./core
+
+jobs:
+  deploy-to-gcp:
+    name: Deploy to GCP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        env:
+          CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+          CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.1.0
