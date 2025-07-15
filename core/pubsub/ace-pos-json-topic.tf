@@ -1,3 +1,9 @@
+provider "google" {
+  project = var.project
+  region  = var.region
+}
+
+
 resource "google_pubsub_topic" "json-input-test" {
   name = "ace-pos-json-input-topic-test"
 }
