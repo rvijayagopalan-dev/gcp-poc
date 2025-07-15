@@ -17,9 +17,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        env:
-          CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
-          CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.1.0
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -34,8 +31,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan 
+        run: terraform plan
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-
