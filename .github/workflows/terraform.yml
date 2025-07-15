@@ -52,5 +52,8 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+      shell: bash
       env: 
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+        CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+        CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.1.0
