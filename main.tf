@@ -11,7 +11,7 @@ provider "google" {
   data-project = var.data-project
 }
 
-resource "google_storage_bucket" "default" {
+resource "google_storage_bucket" "pos-poc-json-input-bucket" {
   name          = "pos-poc-json-input-bucket"
   location      = "US"
   storage_class = "STANDARD"
