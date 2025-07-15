@@ -20,6 +20,11 @@ jobs:
       with:
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: '1.5.0'  # Specify the Terraform version
+    
     - name: Terraform Init
       run: terraform init
       env: 
