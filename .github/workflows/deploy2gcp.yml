@@ -5,15 +5,18 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 defaults:
-  run:
-    working-directory: ./core
+      run:
+        working-directory: core
 
 jobs:
   deploy-to-gcp:
     name: Deploy to GCP
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: core
+        
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
