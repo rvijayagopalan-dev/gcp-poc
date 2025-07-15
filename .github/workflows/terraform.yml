@@ -57,3 +57,4 @@ jobs:
         credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
         CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
         CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.1.0
+        TF_LOG_PROVIDER: 'DEBUG' # Optional: Set to DEBUG for detailed logs
