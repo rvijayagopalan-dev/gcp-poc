@@ -35,7 +35,6 @@ jobs:
       - name: Initialize and Apply Cloud Storage
         working-directory: core/storage
         run: |
-          terraform init
           terraform validate
           terraform plan -var-file=../terraform.tfvars
           terraform apply -auto-approve -var-file=../terraform.tfvars
@@ -45,7 +44,6 @@ jobs:
       - name: Initialize and Apply Pub/Sub
         working-directory: core/pubsub
         run: |
-          terraform init
           terraform validate
           terraform plan -var-file=../terraform.tfvars
           terraform apply -auto-approve -var-file=../terraform.tfvars
