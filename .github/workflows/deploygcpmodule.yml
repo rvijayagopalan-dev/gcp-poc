@@ -27,6 +27,16 @@ jobs:
         with:
           terraform_version: 1.6.6
 
+      - name: Initialize and Apply Core Terraform Storage State
+        working-directory: core
+        run: |
+          terraform init
+          terraform validate
+          terraform plan 
+          terraform apply -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
       - name: Initialize and Apply Cloud Storage
         working-directory: core/storage
         run: |
