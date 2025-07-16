@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'core/**'
-      - '.github/workflows/terraform.yml'
+      - '.github/workflows/deploygcpmodule.yml'
     branches: [ main ]
 
 jobs:
