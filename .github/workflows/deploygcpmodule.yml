@@ -31,11 +31,6 @@ jobs:
         working-directory: core
         run: |
           terraform init
-          terraform validate
-          terraform plan 
-          terraform apply -auto-approve
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Initialize and Apply Cloud Storage
         working-directory: core/storage
