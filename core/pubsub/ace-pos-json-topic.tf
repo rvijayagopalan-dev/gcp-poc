@@ -1,13 +1,6 @@
-provider "google" {
-  project = var.project
-  region  = var.region
-}
-
-
 resource "google_pubsub_topic" "json-input-test" {
   name = "ace-pos-json-input-topic-test"
 }
-
 
 resource "google_pubsub_topic" "core_topic" {
   name = var.topic_name
