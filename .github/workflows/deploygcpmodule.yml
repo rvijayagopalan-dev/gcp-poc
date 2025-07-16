@@ -33,6 +33,7 @@ jobs:
       - name: Apply Cloud Storage Module
         working-directory: core/storage
         run: |
+          terraform init -reconfigure
           terraform plan -var-file=../terraform.tfvars
           terraform apply -auto-approve -var-file=../terraform.tfvars
         env:
@@ -41,6 +42,7 @@ jobs:
       - name: Apply Pub/Sub
         working-directory: core/pubsub
         run: |
+          terraform init -reconfigure
           terraform plan -var-file=../terraform.tfvars
           terraform apply -auto-approve -var-file=../terraform.tfvars
         env:
