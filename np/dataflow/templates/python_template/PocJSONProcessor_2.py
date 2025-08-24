@@ -16,7 +16,7 @@ class CustomOptions(PipelineOptions):
     @classmethod
     def _add_argparse_args(cls, parser):
         parser.add_argument('--input_subscription', required=True)
-        parser.add_argument('--db_user', required=True)
+        parser.add_argument('--db_username', required=True)
         parser.add_argument('--db_password', required=True)
         parser.add_argument('--db_name', required=True)
         parser.add_argument('--db_instance_connection_name', required=True)
@@ -31,7 +31,7 @@ class WriteToCloudSQL(beam.DoFn):
     """def setup(self):
         db_url = URL.create(
             drivername="mysql+pymysql",
-            username=self.options.db_user,
+            username=self.options.db_username,
             password=self.options.db_password,
             database=self.options.db_name,
             query={"unix_socket": f"/cloudsql/{self.options.db_instance_connection_name}"}
@@ -48,7 +48,7 @@ class WriteToCloudSQL(beam.DoFn):
             return connector.connect(
                 self.options.db_instance_connection_name,
                 "pymysql",
-                user=self.options.db_user,
+                user=self.options.db_username,
                 password=self.options.db_password,
                 db=self.options.db_name,
             )
