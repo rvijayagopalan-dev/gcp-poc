@@ -13,12 +13,20 @@ topic_id = "external-topic"
 publisher = pubsub_v1.PublisherClient()
 topic_path = publisher.topic_path(project_id, topic_id)
 
+poc_json_file_path = 'c:/working/gcp/gcp-poc/data/gcp/pos/poslog_00001.json'
+# Open and read the JSON file
+with open(poc_json_file_path, 'r') as file:
+    data = json.load(file)
+
+
 # JSON message to publish
-message_dict = {
+"""message_dict = {
     "id": "00051",
     "description": "Sale 51 from International Sales on July 28",
     "value": "00051-999"
-}
+}"""
+
+message_dict = data
 
 # Convert dict to JSON string and encode to bytes
 message_json = json.dumps(message_dict)

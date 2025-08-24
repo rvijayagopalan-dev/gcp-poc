@@ -1,0 +1,98 @@
+name: Deploy POS Processor Dataflow Flex Template
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: 
+     - '.github/workflows/**'
+     - 'np/**'
+  pull_request:
+    branches: [ "main" ]
+    paths: 
+     - '.github/workflows/**'
+     - 'np/**'
+
+permissions:
+      id-token: write  # Required for Google GitHub Actions authentication
+      contents: write  # Allows reading repository contents
+      checks: write
+      pull-requests: write
+      security-events: write
+      actions: read
+      issues: read
+
+jobs:
+  build-and-deploy:
+    runs-on: [self-hosted, us-west1]
+    
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Authenticate to Google Cloud
+      id: "auth"
+      uses: google-github-actions/auth@v2
+      with:
+        create_credentials_file: true
+        workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER_ID }}
+        service_account: ${{ secrets.GCP_WORKLOAD_IDENTITY_SA_EMAIL }}
+
+    - name: Artifact Registry Auth  
+      run: |
+        gcloud auth configure-docker us-west1-docker.pkg.dev
+
+    - name: Build Docker image
+      env:
+        CLOUDSDK_CORE_PROJECT: p-600-np-whse-sales
+        CLOUDSDK_PROJECT: p-600-np-whse-sales
+        GCLOUD_PROJECT: p-600-np-whse-sales
+        GCP_PROJECT: p-600-np-whse-sales
+        GOOGLE_CLOUD_PROJECT: p-600-np-whse-sales
+      run: |
+        cd np/dataflow/templates/python-template
+        docker build -t pubsub-to-cloudsql:latest .
+        docker tag 'pubsub-to-cloudsql:latest' 'us-west1-docker.pkg.dev/p-600-np-whse-sales/gcp-gar-repo-whsolns/pubsub-to-cloudsql:latest'
+        docker push us-west1-docker.pkg.dev/p-600-np-whse-sales/gcp-gar-repo-whsolns/pubsub-to-cloudsql:latest
+
+    - name: Build POS Processor Flex Template Spec
+      env:
+        CLOUDSDK_CORE_PROJECT: p-600-np-whse-sales
+        CLOUDSDK_PROJECT: p-600-np-whse-sales
+        GCLOUD_PROJECT: p-600-np-whse-sales
+        GCP_PROJECT: p-600-np-whse-sales
+        GOOGLE_CLOUD_PROJECT: p-600-np-whse-sales
+      run: |
+        cd np/dataflow/templates/pos-processor-template
+        gcloud dataflow flex-template build gs://ace-pos-df-gcs-bucket/templates/pubsub-to-cloudsql-spec.json \
+          --image us-west1-docker.pkg.dev/p-600-np-whse-sales/gcp-gar-repo-whsolns/pubsub-to-cloudsql:latest \
+          --sdk-language "PYTHON" \
+          --metadata-file metadata.json \
+          --service-account-email=gco-iam-svc-sales-process-np@p-600-np-whse-sales.iam.gserviceaccount.com \
+          --additional-experiments=enable_confidential_compute
+
+    - name: Run POS Processor Flex Template 1
+      env:
+        CLOUDSDK_CORE_PROJECT: p-600-np-whse-sales
+        CLOUDSDK_PROJECT: p-600-np-whse-sales
+        GCLOUD_PROJECT: p-600-np-whse-sales
+        GCP_PROJECT: p-600-np-whse-sales
+        GOOGLE_CLOUD_PROJECT: p-600-np-whse-sales
+      run: |
+        gcloud dataflow flex-template run "pubsub-to-cloudsql-job" \
+        --template-file-gcs-location=gs://ace-pos-df-gcs-bucket/templates/pubsub-to-cloudsql-spec.json \
+        --region=us-west1 \
+        --parameters="inputSubscription=projects/p-600-np-whse-sales/subscriptions/ace-pos-external-json-topic,username=whse-sales-user,password=YOUR_PASSWORD,databaseName=whse-sales-iseries-replatform-db,databaseInstance=mysql-whse-sales-process-iseries-replatform" \
+        --staging-location=gs://ace-pos-df-gcs-bucket/staging \
+        --temp-location=gs://ace-pos-df-gcs-bucket/temp \
+        --service-account-email=gco-iam-svc-sales-process-np@p-600-np-whse-sales.iam.gserviceaccount.com \
+        --additional-experiments=enable_confidential_compute \
+        --network=gcp-vpc-np-host \
+        --subnetwork=https://www.googleapis.com/compute/v1/projects/gcp-prj-transit-hub/regions/us-west1/subnetworks/gcp-snt-np-usw1-600-whse-sales-replat \
+        --disable-public-ips

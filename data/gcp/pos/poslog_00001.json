@@ -1,0 +1,261 @@
+{
+    "id": "582b0d57b71c4a5f8a4bfc2f0a0ceb1e",
+    "type": "POSLOG_TRANSACTION_FRONTEND_JSON",
+    "transactionType": {
+        "value": "CheckoutTransaction",
+        "code": "00",
+        "retailTransaction": true,
+        "controlTransaction": false,
+        "salesTransaction": true,
+        "returnTransaction": false,
+        "priorStoreClosingId": "10082507012235"
+    },
+    "location": {
+        "locationId": "1008",
+        "country": "US",
+        "currency": "USD"
+    },
+    "channel": {
+        "channelId": "FrontEnd",
+        "description": "ACE TLOG",
+        "assuranceId": "0019784810",
+        "messageTimestamp": "2025-07-02T16:32:44.000Z"
+    },
+    "transactionDetails": {
+        "transactionId": "0075",
+        "sequenceNumber": "02010075",
+        "barcode": "21100820100752507021232",
+        "dateTime": {
+            "posDateTime": "2025-07-02T12:32:00"
+        },
+        "terminal": {
+            "terminalId": "0205",
+            "terminalType": "Register",
+            "terminalLocation": "SelfCheckout"
+        },
+        "operator": {
+            "operatorId": "701"
+        }
+    },
+    "membershipDetails": {
+        "membershipId": "NA",
+        "membershipType": {
+            "type": "NA",
+            "posCode": "0"
+        },
+        "entryMethod": "Keyed",
+        "newSignup": false
+    },
+    "pricingData": {
+        "type": "Alternate",
+        "posCode": "1"
+    },
+    "itemTaxPlan": {
+        "taxType": "Sales",
+        "vatInclusive": false
+    },
+    "items": [
+        {
+            "type": "Sale",
+            "voidFlag": false,
+            "resaleItem": false,
+            "ordinalNumber": "1",
+            "posIdentity": {
+                "posItemId": "4900008145",
+                "itemType": "NormalSale",
+                "entryMethod": "Scanned"
+            },
+            "item": {
+                "itemType": "GTIN-12",
+                "itemId": "049000081459",
+                "sku": "1299062",
+                "department": "14",
+                "quantity": {
+                    "itemQuantity": 1,
+                    "unitOfMeasure": "EACH",
+                    "unitQuantity": 1,
+                    "entryMethod": "Scanned"
+                },
+                "itemIndicators": [
+                    "FoodStampItem"
+                ]
+            },
+            "prices": {
+                "actualUnitPrice": {
+                    "amount": 15.99
+                },
+                "extendedAmount": {
+                    "amount": 15.99
+                },
+                "netAmount": {
+                    "amount": 15.99
+                }
+            },
+            "taxes": [
+                {
+                    "taxExempt": false,
+                    "taxAuthority": "TaxE",
+                    "taxType": "Sales",
+                    "taxAmount": {
+                        "amount": 0.00
+                    }
+                }
+            ],
+            "coupons": {},
+            "links": {
+                "isLinkItem": false,
+                "linkParentOrdinalNumber": "",
+                "hasLinkItems": false,
+                "linkItemOrdinalNumbers": []
+            }
+        }
+    ],
+    "taxes": [
+        {
+            "type": "Sale",
+            "voidFlag": false,
+            "taxAuthority": "TaxE",
+            "taxableAmount": {
+                "amount": 15.99
+            },
+            "taxAmount": {
+                "amount": 0.00
+            },
+            "effectiveTaxRate": 0
+        }
+    ],
+    "tenders": [
+        {
+            "type": "Sale",
+            "voidFlag": false,
+            "tenderId": "62",
+            "tenderType": "CreditDebit",
+            "subTenderType": "Visa",
+            "tenderAmount": {
+                "amount": 15.99
+            },
+            "cashback": {
+                "amount": 0.00
+            },
+            "authorization": {
+                "requestedAmount": {
+                    "amount": 15.99
+                },
+                "authorizationCode": "123456",
+                "referenceNumber": "12345678",
+                "providerId": "0",
+                "authorizationDateTime": "2025-07-02T12:32:24",
+                "authorizingTermId": "0201",
+                "signatureData": {
+                    "length": 0,
+                    "type": "Skipped",
+                    "source": "Financial",
+                    "format": "ASCII3Byte",
+                    "name": "********",
+                    "key": "0"
+                }
+            },
+            "tenderCreditDebit": {
+                "tenderType": "CreditDebit",
+                "issuerIdentificationNumber": "0",
+                "primaryAccountNumber": "1234567890123456",
+                "issueSequence": "201332",
+                "expirationDate": {
+                    "date": "00000",
+                    "encrypted": true
+                },
+                "serviceCode": "NA",
+                "epsTender": {
+                    "hostId": "RA",
+                    "totalsType": "SaleOnline",
+                    "totalAmount": {
+                        "amount": 15.99
+                    },
+                    "dateTime": "250702123224",
+                    "actionCode": {
+                        "generalReason": "A"
+                    },
+                    "rrn": "0",
+                    "sequence": "201332",
+                    "messageType": {
+                        "type": "CreditRequest",
+                        "posCode": "1"
+                    },
+                    "responseCode": {
+                        "type": "Approved",
+                        "posCode": "0"
+                    },
+                    "reasonCode": {
+                        "type": "Timeout",
+                        "posCode": "0"
+                    },
+                    "expirationDate": "7110",
+                    "tenderType": "62",
+                    "cashback": {
+                        "amount": 0.00
+                    },
+                    "accountNumber": "1234567890123456",
+                    "entryMethod": "EMVContactless",
+                    "id1": "T2-1234567890123456=7110                ",
+                    "id2": "0",
+                    "approvalCode": "NA",
+                    "responseCodeDescriptor": "APPROVED",
+                    "approvalCodeSource": {
+                        "type": "FromHost",
+                        "posCode": "H"
+                    },
+                    "accountType": {
+                        "type": "NotSpecified"
+                    },
+                    "voucherNumber": "0",
+                    "acquireInstitutionNumber": "0",
+                    "originalHostResponseCode": "000",
+                    "hostResponseIndicator": "1",
+                    "flags1": [],
+                    "qualifiedHealthPlanAmount": {
+                        "amount": 0.00
+                    },
+                    "prescriptionAmount": {
+                        "amount": 0.00
+                    },
+                    "originalTenderAmount": {
+                        "amount": 15.99
+                    },
+                    "token": "1477848758957134"
+                },
+                "returnToCard": {
+                    "token": "1477848758957134",
+                    "tokenType": "EPS",
+                    "cardPlan": "VI"
+                }
+            }
+        }
+    ],
+    "totals": [
+        {
+            "totalType": "TransactionGrossAmount",
+            "totalAmount": {
+                "amount": 15.99
+            }
+        },
+        {
+            "totalType": "TransactionNetAmount",
+            "totalAmount": {
+                "amount": 15.99
+            }
+        }
+    ],
+    "receipt": {
+        "footerLines": [
+            " TOTAL TAX                     0.00",
+            "TOTAL NUMBER OF ITEMS SOLD =  1"
+        ]
+    },
+    "version": {
+        "revisionDate": "2025-07-02",
+        "major": "1",
+        "minor": "0",
+        "revision": "5",
+        "version": "1.0.5"
+    }
+}

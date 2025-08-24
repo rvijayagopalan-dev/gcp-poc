@@ -1,8 +1,8 @@
-python poc.dataflow.templates/PocJSONProcessor.py `
+python poc.dataflow.templates/PocJSONProcessor_1.py `
   --project=sales-poc-465319 `
   --region=us-east1 `
   --runner=DataflowRunner `
-  --input_subscription=projects/sales-poc-465319/subscriptions/external-topic-sub `
+  --input_subscription=projects/sales-poc-465319/subscriptions/external-topic-df-sub `
   --db_user=gcp-poc-mysql-db-user1 `
   --db_password=PocUser1@12345 `
   --db_name=gcp-poc-mysql-db1 `
@@ -10,3 +10,18 @@ python poc.dataflow.templates/PocJSONProcessor.py `
   --temp_location=gs://poc-dataflow-runner-staging/temp `
   --staging_location=gs://poc-dataflow-runner-staging/staging `
   --requirements_file=poc.dataflow.templates/requirements.txt
+
+
+  python PocJSONProcessor_1.py `
+  --project=sales-poc-465319 `
+  --region=us-east1 `
+  --runner=DataflowRunner `
+  --input_subscription=projects/sales-poc-465319/subscriptions/external-topic-df-sub `
+  --db_user=gcp-poc-mysql-db-user1 `
+  --db_password=PocUser1@12345 `
+  --db_name=gcp-poc-mysql-db1 `
+  --db_instance_connection_name=sales-poc-465319:us-east1:gcp-poc-mysql-db `
+  --temp_location=gs://poc-dataflow-runner-staging/temp `
+  --staging_location=gs://poc-dataflow-runner-staging/staging `
+  --requirements_file=requirements.txt `
+  --setup_file=setup.py

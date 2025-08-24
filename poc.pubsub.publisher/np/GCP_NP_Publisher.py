@@ -3,11 +3,11 @@ import os
 from google.cloud import pubsub_v1
 
 # Path to your service account key file
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/working/credentials/gcp/sa/gcp_service_account.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/working/credentials/gcp/np/p-600-np-whse-sales.json"
 
 # Replace with your project ID and topic name
-project_id = "sales-poc-465319"
-topic_id = "external-topic"
+project_id = "p-600-np-whse-sales"
+topic_id = "external-json-topic"
 
 # Create a Publisher client
 publisher = pubsub_v1.PublisherClient()
