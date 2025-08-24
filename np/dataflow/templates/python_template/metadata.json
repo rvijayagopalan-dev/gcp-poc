@@ -1,0 +1,36 @@
+{
+  "name": "PubSub to CloudSQL",
+  "description": "Reads messages from Pub/Sub and writes to Cloud SQL",
+  "parameters": [
+    {
+      "name": "inputSubscription",
+      "label": "Pub/Sub Subscription",
+      "helpText": "Subscription to read messages from",
+      "isOptional": false
+    },
+    {
+      "name": "databaseInstance",
+      "label": "Cloud SQL Instance",
+      "helpText": "Target Cloud SQL instance",
+      "isOptional": false
+    },
+    {
+      "name": "databaseName",
+      "label": "Database Name",
+      "helpText": "Target database name",
+      "isOptional": false
+    },
+    {
+      "name": "username",
+      "label": "DB Username",
+      "helpText": "Cloud SQL username",
+      "isOptional": false
+    },
+    {
+      "name": "password",
+      "label": "DB Password",
+      "helpText": "Cloud SQL password",
+      "isOptional": false
+    }
+  ]
+}
