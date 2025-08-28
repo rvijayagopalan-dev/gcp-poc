@@ -60,7 +60,7 @@ jobs:
           --image gcr.io/sales-poc-465319/pubsub-to-cloudsql:latest `
           --sdk-language "PYTHON" `
           --metadata-file metadata.json `
-          --setup-file=./setup.py 
+          --setup-file=./setup_new.py 
 
     - name: Run POS Processor Flex Template 1
       run: |
