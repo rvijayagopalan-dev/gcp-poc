@@ -5,5 +5,8 @@ setup(
     name='pos_utils',
     version='0.1',
     packages=find_packages(),
-    install_requires=[]
+    install_requires=['apache-beam[gcp]',
+                      'pymysql',
+                      'sqlalchemy',
+                      'cloud-sql-python-connector[pymysql]']
 )

@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   build-and-deploy:
-    runs-on: [ubuntu]
+    runs-on: [ubuntu-latest]
     
     permissions:
       contents: read
@@ -44,7 +44,7 @@ jobs:
 
     - name: Artifact Registry Auth  
       run: |
-        gcloud auth configure-docker us-west1-docker.pkg.dev
+        gcloud auth configure-docker
 
     - name: Build Docker image
       run: |
@@ -56,17 +56,17 @@ jobs:
     - name: Build POS Processor Flex Template Spec
       run: |
         cd np/dataflow/templates/pos-processor-template
-        gcloud dataflow flex-template build gs://poc-df-flex-template/templates/pubsub-to-cloudsql-spec.json \
-          --image gcr.io/sales-poc-465319/pubsub-to-cloudsql:latest \
-          --sdk-language "PYTHON" \
-          --metadata-file metadata.json \
-          --additional-experiments=enable_confidential_compute
+        gcloud dataflow flex-template build gs://poc-df-flex-template/templates/pubsub-to-cloudsql-spec.json `
+          --image gcr.io/sales-poc-465319/pubsub-to-cloudsql:latest `
+          --sdk-language "PYTHON" `
+          --metadata-file metadata.json `
+          --setup-file=./setup_new.py 
 
     - name: Run POS Processor Flex Template 1
       run: |
-        gcloud dataflow flex-template run "pubsub-to-cloudsql-job" \
-        --template-file-gcs-location=gs://poc-df-flex-template/templates/pubsub-to-cloudsql-spec.json \
-        --region=us-west1 \
-        --parameters="inputSubscription=projects/sales-poc-465319/subscriptions/external-topic-df-sub,username=gcp-poc-mysql-db-user1,password=PocUser1@12345,databaseName=gcp-poc-mysql-db1,databaseInstance=sales-poc-465319:us-east1:gcp-poc-mysql-db" \
-        --staging-location=gs://poc-df-flex-template/staging \
+        gcloud dataflow flex-template run "pubsub-to-cloudsql-job-1" `
+        --template-file-gcs-location=gs://poc-df-flex-template/templates/pubsub-to-cloudsql-spec.json `
+        --region=us-east1 `
+        --parameters="input_subscription=projects/sales-poc-465319/subscriptions/external-topic-df-sub,db_username=gcp-poc-mysql-db-user1,db_password=PocUser1@12345,db_name=gcp-poc-mysql-db1,db_instance_connection_name=sales-poc-465319:us-east1:gcp-poc-mysql-db" `
+        --staging-location=gs://poc-df-flex-template/staging `
         --temp-location=gs://poc-df-flex-template/temp

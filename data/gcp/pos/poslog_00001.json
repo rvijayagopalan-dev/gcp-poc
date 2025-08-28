@@ -11,7 +11,7 @@
         "priorStoreClosingId": "10082507012235"
     },
     "location": {
-        "locationId": "1008",
+        "locationId": "3001",
         "country": "US",
         "currency": "USD"
     },
@@ -29,7 +29,7 @@
             "posDateTime": "2025-07-02T12:32:00"
         },
         "terminal": {
-            "terminalId": "0205",
+            "terminalId": "0301",
             "terminalType": "Register",
             "terminalLocation": "SelfCheckout"
         },

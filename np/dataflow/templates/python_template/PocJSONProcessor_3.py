@@ -6,9 +6,9 @@ from sqlalchemy.engine import URL
 import json
 import logging
 
-from pos_utils import PosHeaderUtil, PosDetailUtil, PosTenderUtil
+from pos_utils_new import PosHeaderUtil, PosDetailUtil, PosTenderUtil
 
-# Configure logging
+# Configure logging changes added
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -86,71 +86,120 @@ class WriteToCloudSQL(beam.DoFn):
             data = json.loads(element)
             logger.info("json data: %s", data)
 
-            header_record = self.pos_header_extractor(data)
-            detail_record = self.pos_detail_extractor(data)
-            tender_record = self.pos_tender_extractor(data)
+            header_record  = self.pos_header_extractor(data)
+            detail_records = self.pos_detail_extractor(data)
+            tender_records = self.pos_tender_extractor(data)
 
             with self.engine.connect() as conn:
                 self.insertHeaderRecord(conn, header_record)
-                self.insertDetailRecord(conn, detail_record)
-                self.insertTenderRecord(conn, tender_record)
+                self.insertDetailRecord(conn, detail_records)
+                self.insertTenderRecord(conn, tender_records)
 
         except Exception as e:
             logger.error("Error inserting row: %s", e)
 
-    def pos_header_extractor(self, pos_record):
+    def pos_header_extractor(pos_record):
         return {
-        'locationId': PosHeaderUtil.h_H1WHSE(pos_record['location']['locationId']),
-        'registerId': PosHeaderUtil.h_H1REG(pos_record["transactionDetails"]["terminal"]["terminalId"])
+            'warehouseNumber' : PosHeaderUtil.h_H1WHSE(pos_record),
+            'registerNumber'  : PosHeaderUtil.h_H1REG(pos_record),
+            'grossPlus'       : PosHeaderUtil.h_H1PLUS(pos_record),
+            'grossMinus'      : PosHeaderUtil.h_H1MNUS(pos_record),
+            'amountTaxA'      : PosHeaderUtil.h_H1XAAM(pos_record),
+            'amountTaxB'      : PosHeaderUtil.h_H1XBAM(pos_record),
+            'amountTaxC'      : PosHeaderUtil.h_H1XCAM(pos_record),
+            'amountTaxD'      : PosHeaderUtil.h_H1XDAM(pos_record),
+            'transactionTotal': PosHeaderUtil.h_H1TSAL(pos_record),
+            'resaleTotal'     : PosHeaderUtil.h_H1TRSL(pos_record)
         }
 
-    def pos_detail_extractor(self, pos_record): 
-        return {
-        'locationId': PosDetailUtil.d_D1WHSE(pos_record['location']['locationId']),
-        'registerId': PosDetailUtil.d_D1REG(pos_record["transactionDetails"]["terminal"]["terminalId"])
-        }
+    def pos_detail_extractor(pos_record):
+        pos_items = pos_record.get('items', [])
+        extracted_details = []
+        
+        for pos_item in pos_items:
+            detailObj = {
+                'warehouseNumber'  : PosDetailUtil.d_D1WHSE(pos_record),
+                'registerNumber'   : PosDetailUtil.d_D1REG(pos_record),
+                'extendedSellPrice': PosDetailUtil.d_D1SELL(pos_item),
+                'departmentNumber' : PosDetailUtil.d_D1DEPT(pos_item),
+                'unitSellPrice'    : PosDetailUtil.d_D1USEL(pos_item)
+            }
+            extracted_details.append(detailObj)
+        
+        return extracted_details
 
-    def pos_tender_extractor(self, pos_record):
-        return {
-        'locationId': PosTenderUtil.t_T1WHSE(pos_record['location']['locationId']),
-        'registerId': PosTenderUtil.t_T1REG(pos_record["transactionDetails"]["terminal"]["terminalId"])
-        }
+    def pos_tender_extractor(pos_record):
+        pos_tenders = pos_record.get('tenders', [])
+        extracted_tenders = []
+
+        for pos_tender in pos_tenders:
+            tenderObj = {
+                'warehouseNumber': PosTenderUtil.t_T1WHSE(pos_record),
+                'registerNumber' : PosTenderUtil.t_T1REG(pos_record),
+                'tenderAmount'   : PosTenderUtil.t_T1AMT(pos_tender)
+            }
+            extracted_tenders.append(tenderObj)
+
+        return extracted_tenders
     
     def insertHeaderRecord(self, conn, header_record):
         stmt = sqlalchemy.text(
-            "INSERT INTO INTLH1P (H1WHSE, H1REG) " 
-            "VALUES (:value1, :value2)"
+            "INSERT INTO INTLH1P (H1WHSE, H1REG, H1PLUS, H1MNUS, H1XAAM, H1XBAM, H1XCAM, H1XDAM, H1TSAL, H1TRSL) " 
+            "VALUES (:value1, :value2, :value3, :value4, :value5, :value6, :value7, :value8, :value9, :value10)"
         )
         conn.execute(stmt, {
-            "value1": header_record.get("locationId"),
-            "value2": header_record.get("registerId")
+            "value1": header_record.get("warehouseNumber"),
+            "value2": header_record.get("registerNumber"),
+            "value3": header_record.get("grossPlus"),
+            "value4": header_record.get("grossMinus"),
+            "value5": header_record.get("amountTaxA"),
+            "value6": header_record.get("amountTaxB"),
+            "value7": header_record.get("amountTaxC"),
+            "value8": header_record.get("amountTaxD"),
+            "value9": header_record.get("transactionTotal"),
+            "value10": header_record.get("resaleTotal")
         })
         conn.commit()
         logger.info("Inserted Header Row with ID: %s-%s", header_record.get("locationId"), header_record.get("registerId"))
 
-    def insertDetailRecord(self, conn, detail_record):
+    def insertDetailRecord(self, conn, detail_records):
         stmt = sqlalchemy.text(
-            "INSERT INTO INTLD1P (D1WHSE, D1REG) " 
-            "VALUES (:value1, :value2)"
+            "INSERT INTO INTLD1P (D1WHSE, D1REG, D1SELL, D1DEPT, D1USEL) " 
+            "VALUES (:value1, :value2, :value3, :value4, :value5)"
         )
-        conn.execute(stmt, {
-            "value1": detail_record.get("locationId"),
-            "value2": detail_record.get("registerId")
-        })
-        conn.commit()
-        logger.info("Inserted Detail Row with ID: %s-%s", detail_record.get("locationId"), detail_record.get("registerId"))
 
-    def insertTenderRecord(self, conn, tender_record):
-        stmt = sqlalchemy.text(
-            "INSERT INTO INTLT1P (T1WHSE, T1REG) " 
-            "VALUES (:value1, :value2)"
-        )
-        conn.execute(stmt, {
-            "value1": tender_record.get("locationId"),
-            "value2": tender_record.get("registerId")
-        })
+        params = []
+        for detail in detail_records:  # <- make sure this is a list
+            params.append({
+            "value1": detail.get("warehouseNumber"),
+            "value2": detail.get("registerNumber"),
+            "value3": detail.get("extendedSell"),
+            "value4": detail.get("department"),
+            "value5": detail.get("unitSell")
+            })
+
+        with conn.begin():
+            result = conn.execute(stmt, params)
+            logger.info("Inserted %s Detail rows.", result.rowcount or 0)
         conn.commit()
-        logger.info("Inserted Tender Row with ID: %s-%s", tender_record.get("locationId"), tender_record.get("registerId"))
+
+    def insertTenderRecord(self, conn, tender_records):        
+        stmt = sqlalchemy.text(
+            "INSERT INTO INTLT1P (T1WHSE, T1REG, T1AMT) "
+            "VALUES (:value1, :value2, :value3)"
+        )
+
+        params = []
+        for tender in tender_records:  # <- make sure this is a list
+            params.append({
+                "value1": tender.get("locationId"),
+                "value2": tender.get("registerId"),
+                "value3": tender.get("tenderAmount"),
+            })
+
+        with conn.begin():
+            result = conn.execute(stmt, params)
+            logger.info("Inserted %s Tender rows.", result.rowcount or 0)
 
 def run(argv=None):
     pipeline_options = PipelineOptions(argv)
